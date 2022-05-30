@@ -1,0 +1,30 @@
+/* You can add global styles to this file, and also import other style files */
+@import './font.scss';
+
+:root {
+  --bg-color: #f4efe9;
+  --main-color: #ffc73b;
+  --main-dark-color: #f9c035;
+  --main-hover-color: #f9c035;
+  --error-color: red;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+  font-family: 'Open Sans', sans-serif;
+
+  user-select: none;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  overflow: hidden;
+  position: relative;
+}
