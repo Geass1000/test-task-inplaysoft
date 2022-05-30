@@ -9,6 +9,7 @@ import { BaseManager } from '../../shared';
 // SS
 
 // RS
+import { CurrencyRateRS } from '../resources/currency-rate.rs';
 
 import type { Interfaces } from '../shared';
 import { Enums } from '../shared';
@@ -27,6 +28,7 @@ export class CurrencyArbiter extends BaseManager {
     private httpClient: HttpClient,
     // Engines
     // RS
+    private currencyRateRS: CurrencyRateRS,
     // SS
   ) {
     super();
@@ -41,7 +43,9 @@ export class CurrencyArbiter extends BaseManager {
     return this.sjNotif.asObservable();
   }
 
-  $init (): void {
+  async $init (): Promise<void> {
+    await this.updateCurrencyRates();
+
     const currencyUpdateIntervalSec = this.localStorageService
       .getNumber(Enums.LocalStorageKey.CurrencyUpdateInterval, 10);
 
@@ -70,18 +74,11 @@ export class CurrencyArbiter extends BaseManager {
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.currencyUpdateIntervalTimer = setTimeout(async () => {
+      await this.updateCurrencyRates();
       this.currencyUpdateIntervalTimer = null;
 
-      try {
-        const currencyRates = await this.loadCurrentCurrencyRates();
-        // TODO: Save currency rates in store
-        console.log(currencyRates);
-      } catch (error) {
-        console.error(`CurrencyArbiter.startCurrencyUpdateInterval: Can't load currency rates. Error:`, error);
-      }
-
       // FYI: Next iteration. We don't use interval timer bz we want to start next iteration only after we get a
-      // current currency rates.
+      // current currency rates. Macrotask level interval.
       this.startCurrencyUpdateInterval(currencyUpdateIntervalSec);
     }, currencyUpdateIntervalSec * 1000) as any as number;
   }
@@ -98,6 +95,21 @@ export class CurrencyArbiter extends BaseManager {
 
     clearTimeout(this.currencyUpdateIntervalTimer);
     this.currencyUpdateIntervalTimer = null;
+  }
+
+  /**
+   * Loads the new currency rates and saves them in resource store.
+   *
+   * @return {Promise<void>}
+   */
+  private async updateCurrencyRates (): Promise<void> {
+    try {
+      const currencyRates = await this.loadCurrentCurrencyRates();
+      this.currencyRateRS.inject(currencyRates);
+      console.log(currencyRates);
+    } catch (error) {
+      console.error(`CurrencyArbiter.startCurrencyUpdateInterval: Can't load currency rates. Error:`, error);
+    }
   }
 
   /**
