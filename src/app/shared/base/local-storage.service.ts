@@ -74,7 +74,7 @@ export class LocalStorageService {
    */
   getNumber (
     localStorageKey: string,
-    defaultValue: number,
+    defaultValue?: number,
   ): number {
     const localStorageValue = localStorage.getItem(localStorageKey);
 
