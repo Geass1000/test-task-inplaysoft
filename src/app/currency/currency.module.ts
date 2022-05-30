@@ -9,6 +9,7 @@ import { CurrencyRouter } from './currency.router';
 import { CurrencyMainComponent } from './components/currency-main';
 
 // Services
+import { CurrencyArbiter } from './services/currency.arbiter';
 
 // RS
 
@@ -27,6 +28,7 @@ import { CurrencyMainComponent } from './components/currency-main';
   ],
   providers: [
     // Services
+    CurrencyArbiter,
   ],
 })
 export class CurrencyModule {
