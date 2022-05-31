@@ -1,0 +1,10 @@
+
+<a
+  *ngFor="let route of routes"
+  [routerLink]="route.path"
+  routerLinkActive="active"
+>
+  {{ route.label }}
+</a>
+
+<router-outlet (activate)="onRouteActivated()"></router-outlet>

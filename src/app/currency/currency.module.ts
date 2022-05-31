@@ -8,6 +8,7 @@ import { SharedModule } from '../shared/shared.module';
 import { CurrencyRouter } from './currency.router';
 
 // Components
+import { CurrencyComponent } from './components/currency';
 import { CurrencyMainComponent } from './components/currency-main';
 import { CurrencyRatesComponent } from './components/currency-rates';
 
@@ -30,6 +31,7 @@ import { CurrencyRateRS } from './resources/currency-rate.rs';
   ],
   declarations: [
     // Components
+    CurrencyComponent,
     CurrencyMainComponent,
     CurrencyRatesComponent,
   ],
