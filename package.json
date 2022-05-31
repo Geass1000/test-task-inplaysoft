@@ -29,6 +29,8 @@
     "@krix/module": "^1.0.0",
     "@krix/resource-store": "^1.0.0",
     "@krix/state-store": "^6.0.1",
+    "ag-grid-angular": "^27.3.0",
+    "ag-grid-community": "^27.3.0",
     "lodash": "^4.17.21",
     "luxon": "^2.0.2",
     "reflect-metadata": "^0.1.13",
