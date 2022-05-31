@@ -13,6 +13,7 @@ import { CurrencyMainComponent } from './components/currency-main';
 import { CurrencyRatesComponent } from './components/currency-rates';
 
 // Services
+import { CurrencyService } from './services/currency.service';
 import { CurrencyArbiter } from './services/currency.arbiter';
 import { CurrencyRatesArbiter } from './services/currency-rates.arbiter';
 
@@ -37,6 +38,7 @@ import { CurrencyRateRS } from './resources/currency-rate.rs';
   ],
   providers: [
     // Services
+    CurrencyService,
     CurrencyArbiter,
     CurrencyRatesArbiter,
     // RS

@@ -1,18 +1,15 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 import { BaseManager } from '../../shared';
 
 // Services
+import { CurrencyService } from './currency.service';
 import { CurrencyRatesArbiter } from './currency-rates.arbiter';
 
 // SS
 
 // RS
-import { CurrencyRateRS } from '../resources/currency-rate.rs';
-
-import type { Interfaces } from '../shared';
 import { Enums } from '../shared';
 
 @Injectable()
@@ -26,11 +23,9 @@ export class CurrencyArbiter extends BaseManager {
   public sjNotif: Subject<number> = new Subject();
 
   constructor (
-    private httpClient: HttpClient,
-    // Engines
+    // Service
+    private currencyService: CurrencyService,
     private currencyRatesArbiter: CurrencyRatesArbiter,
-    // RS
-    private currencyRateRS: CurrencyRateRS,
     // SS
   ) {
     super();
@@ -106,31 +101,11 @@ export class CurrencyArbiter extends BaseManager {
    */
   private async updateCurrencyRates (): Promise<void> {
     try {
-      const currencyRates = await this.loadCurrentCurrencyRates();
+      const currencyRates = await this.currencyService.loadCurrentCurrencyRates();
 
       this.currencyRatesArbiter.updateCurrencyRates(currencyRates);
     } catch (error) {
       console.error(`CurrencyArbiter.startCurrencyUpdateInterval: Can't load currency rates. Error:`, error);
     }
-  }
-
-  /**
-   * Loads the list of current currency rates.
-   *
-   * @return {Promise<Interfaces.CurrencyRate[]>}
-   */
-  private async loadCurrentCurrencyRates (): Promise<Interfaces.CurrencyRate[]> {
-    const endpoint = `https://api.coingecko.com/api/v3/exchange_rates`;
-    const resp = await this.httpClient.get<Interfaces.CurrencyRatesResp>(endpoint).toPromise();
-
-    const currencyRates = _.map(resp.rates, (currencyRate, currencyId) => {
-      return {
-        ...currencyRate,
-        id: currencyId,
-        createdAt: new Date(),
-      } as Interfaces.CurrencyRate;
-    });
-
-    return currencyRates;
   }
 }
