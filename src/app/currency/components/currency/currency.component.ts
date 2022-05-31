@@ -11,6 +11,7 @@ import { BaseComponent } from '@shared';
 
 // Services
 import { CurrencyArbiter } from '../../services/currency.arbiter';
+import { CurrencyRatesArbiter } from '../../services/currency-rates.arbiter';
 
 // SS
 
@@ -46,6 +47,7 @@ export class CurrencyComponent extends BaseComponent implements OnInit {
     protected changeDetection: ChangeDetectorRef,
     // Services
     private currencyArbiter: CurrencyArbiter,
+    private currencyRatesArbiter: CurrencyRatesArbiter,
     // RS
     // SS
   ) {
@@ -55,6 +57,7 @@ export class CurrencyComponent extends BaseComponent implements OnInit {
   async ngOnInit (
   ): Promise<void> {
     // Init arbiters
+    await this.currencyRatesArbiter.$init();
     await this.currencyArbiter.$init();
 
     this.forceRender();

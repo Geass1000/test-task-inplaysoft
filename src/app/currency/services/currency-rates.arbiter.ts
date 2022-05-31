@@ -5,6 +5,7 @@ import * as luxon from 'luxon';
 import { BaseManager } from '../../shared';
 
 // Services
+import { CurrencyService } from './currency.service';
 
 // SS
 
@@ -16,10 +17,11 @@ import { Enums } from '../shared';
 
 @Injectable()
 export class CurrencyRatesArbiter extends BaseManager {
-  private prevCurrencyRates: Map<string, Interfaces.CurrencyRatePayload[]> = new Map();
+  private prevCurrencyRatesMap: Map<string, Interfaces.CurrencyRatePayload[]> = new Map();
 
   constructor (
-    // Engines
+    // Services
+    private currencyService: CurrencyService,
     // RS
     private currencyRateRS: CurrencyRateRS,
     // SS
@@ -27,7 +29,19 @@ export class CurrencyRatesArbiter extends BaseManager {
     super();
   }
 
+  /**
+   * Inits the arbiter:
+   *  - loads the previous currency rates history and sets it in local property.
+   *
+   * @return {Promise<void>}
+   */
   async $init (): Promise<void> {
+    const prevCurrencyRatesHistory = await this.currencyService.loadCurrencyRatesHistory();
+
+    this.prevCurrencyRatesMap.clear();
+    _.forEach(prevCurrencyRatesHistory, (currencyRateHistoryItem) => {
+      this.prevCurrencyRatesMap.set(currencyRateHistoryItem.id, currencyRateHistoryItem.rates);
+    });
   }
 
   /**
@@ -83,7 +97,7 @@ export class CurrencyRatesArbiter extends BaseManager {
   private calculateCurrencyStats (
     currencyRate: Interfaces.CurrencyRate,
   ): Interfaces.CurrencyRateStats {
-    const prevCurrencyRateValues = this.prevCurrencyRates.get(currencyRate.id) ?? [];
+    const prevCurrencyRateValues = this.prevCurrencyRatesMap.get(currencyRate.id) ?? [];
 
     const allCurrencyRateValues = [ ...prevCurrencyRateValues, currencyRate ];
     const curDateLx = luxon.DateTime.local();
@@ -133,7 +147,7 @@ export class CurrencyRatesArbiter extends BaseManager {
     }
 
     _.forEach(prevCurrencyRates, (currencyRate) => {
-      const prevCurrencyRateValues = this.prevCurrencyRates.get(currencyRate.id) ?? [];
+      const prevCurrencyRateValues = this.prevCurrencyRatesMap.get(currencyRate.id) ?? [];
 
       // FYI[WORKFLOW]: Store minimized object to reduce memory usage
       const newShortCurrencyRate: Interfaces.CurrencyRatePayload = {
@@ -148,7 +162,7 @@ export class CurrencyRatesArbiter extends BaseManager {
         updatedRateValues.splice(0, 1, newShortCurrencyRate);
       }
 
-      this.prevCurrencyRates.set(currencyRate.id, updatedRateValues);
+      this.prevCurrencyRatesMap.set(currencyRate.id, updatedRateValues);
     });
   }
 }

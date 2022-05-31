@@ -1,6 +1,7 @@
 
 export enum LocalStorageKey {
   CurrencyUpdateInterval = `CurrencyUpdateInterval`,
+  CurrencyRatesHistory = `CurrencyRatesHistory`,
 }
 
 export enum CurrencyUpdateState {

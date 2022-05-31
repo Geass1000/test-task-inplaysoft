@@ -27,3 +27,8 @@ export interface CurrencyRatesResp {
     [key: string]: CurrencyRate;
   };
 }
+
+export interface CurrencyRateHistoryItem {
+  id: string;
+  rates: CurrencyRatePayload[];
+}

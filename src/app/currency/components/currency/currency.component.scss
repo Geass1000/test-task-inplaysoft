@@ -8,19 +8,3 @@
   flex-direction: column;
   position: relative;
 }
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  margin-bottom: 15px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.settings-section {
-  margin-bottom: 35px;
-}
