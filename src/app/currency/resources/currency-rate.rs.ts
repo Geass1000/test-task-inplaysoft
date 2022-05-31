@@ -15,5 +15,15 @@ export class CurrencyRateRS extends KrixRS.ResourceStore<Interfaces.CurrencyRate
     unit: SchemaType.String,
     value: SchemaType.Number,
     type: SchemaType.String,
+
+    createdAt: SchemaType.Date,
+    // Stats
+    avg1Min: SchemaType.Number,
+    avg2Min: SchemaType.Number,
+    avg3Min: SchemaType.Number,
+    avg5Min: SchemaType.Number,
+    min: SchemaType.Number,
+    max: SchemaType.Number,
+    updateState: SchemaType.String,
   };
 }

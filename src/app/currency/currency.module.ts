@@ -10,9 +10,10 @@ import { CurrencyMainComponent } from './components/currency-main';
 
 // Services
 import { CurrencyArbiter } from './services/currency.arbiter';
-import { CurrencyRateRS } from './resources/currency-rate.rs';
+import { CurrencyRatesArbiter } from './services/currency-rates.arbiter';
 
 // RS
+import { CurrencyRateRS } from './resources/currency-rate.rs';
 
 // SS
 
@@ -30,6 +31,7 @@ import { CurrencyRateRS } from './resources/currency-rate.rs';
   providers: [
     // Services
     CurrencyArbiter,
+    CurrencyRatesArbiter,
     // RS
     CurrencyRateRS,
   ],

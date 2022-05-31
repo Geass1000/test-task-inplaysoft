@@ -5,6 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { BaseManager } from '../../shared';
 
 // Services
+import { CurrencyRatesArbiter } from './currency-rates.arbiter';
 
 // SS
 
@@ -27,6 +28,7 @@ export class CurrencyArbiter extends BaseManager {
   constructor (
     private httpClient: HttpClient,
     // Engines
+    private currencyRatesArbiter: CurrencyRatesArbiter,
     // RS
     private currencyRateRS: CurrencyRateRS,
     // SS
@@ -47,7 +49,7 @@ export class CurrencyArbiter extends BaseManager {
     await this.updateCurrencyRates();
 
     const currencyUpdateIntervalSec = this.localStorageService
-      .getNumber(Enums.LocalStorageKey.CurrencyUpdateInterval, 10);
+      .getNumber(Enums.LocalStorageKey.CurrencyUpdateInterval, 15);
 
     this.startCurrencyUpdateInterval(currencyUpdateIntervalSec);
   }
@@ -105,8 +107,8 @@ export class CurrencyArbiter extends BaseManager {
   private async updateCurrencyRates (): Promise<void> {
     try {
       const currencyRates = await this.loadCurrentCurrencyRates();
-      this.currencyRateRS.inject(currencyRates);
-      console.log(currencyRates);
+
+      this.currencyRatesArbiter.updateCurrencyRates(currencyRates);
     } catch (error) {
       console.error(`CurrencyArbiter.startCurrencyUpdateInterval: Can't load currency rates. Error:`, error);
     }
@@ -125,6 +127,7 @@ export class CurrencyArbiter extends BaseManager {
       return {
         ...currencyRate,
         id: currencyId,
+        createdAt: new Date(),
       } as Interfaces.CurrencyRate;
     });
 
