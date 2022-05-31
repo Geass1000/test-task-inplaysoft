@@ -1,28 +1,30 @@
 
-<div class="form-group currency-update-interval">
-  <label
-    for="currencyUpdateInterval"
-    class="form-el-label"
-  >Currency Update Interval</label>
-  <input
-    type="number"
-    id="currencyUpdateInterval"
-    class="form-el-input"
-    [(ngModel)]="currencyUpdateInterval"
-    (ngModelChange)="onChangeCurrencyUpdateInterval()"
-  >
-</div>
-
-<div class="form-group currency-change-direction-timeout">
-  <label
-    for="currencyChangeDirectionTimeout"
-    class="form-el-label"
-  >Currency Change Direction Timeout</label>
-  <input
-    type="number"
-    id="currencyChangeDirectionTimeout"
-    class="form-el-input"
-    [(ngModel)]="currencyChangeDirectionTimeout"
-    (ngModelChange)="onChangeCurrencyUpdateInterval()"
-  >
+<div class="settings-section">
+  <div class="form-group currency-update-interval">
+    <label
+      for="currencyUpdateInterval"
+      class="form-el-label"
+    >Currency Update Interval</label>
+    <input
+      type="number"
+      id="currencyUpdateInterval"
+      class="form-el-input"
+      [(ngModel)]="currencyUpdateInterval"
+      (ngModelChange)="onChangeCurrencyUpdateInterval()"
+    >
+  </div>
+  
+  <div class="form-group currency-change-direction-timeout">
+    <label
+      for="currencyChangeDirectionTimeout"
+      class="form-el-label"
+    >Currency Change Direction Timeout</label>
+    <input
+      type="number"
+      id="currencyChangeDirectionTimeout"
+      class="form-el-input"
+      [(ngModel)]="currencyChangeDirectionTimeout"
+      (ngModelChange)="onChangeCurrencyUpdateInterval()"
+    >
+  </div>
 </div>

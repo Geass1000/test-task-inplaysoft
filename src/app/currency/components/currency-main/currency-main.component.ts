@@ -14,7 +14,7 @@ import { CurrencyArbiter } from '../../services/currency.arbiter';
 
 // SS
 
-import { Enums } from '../../shared';
+import { Enums, Interfaces } from '../../shared';
 
 @Component({
   selector: 'ag-currency-main',
@@ -42,9 +42,6 @@ export class CurrencyMainComponent extends BaseComponent implements OnInit {
     // Init form
     this.currencyUpdateInterval = this.localStorageService
       .getNumber(Enums.LocalStorageKey.CurrencyUpdateInterval, 10);
-
-    // Init arbiters
-    await this.currencyArbiter.$init();
 
     this.forceRender();
   }
