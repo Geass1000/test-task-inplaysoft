@@ -50,7 +50,7 @@ export class CurrencyHistoryArbiter extends BaseManager {
    * @param  {string} id
    * @return {Interfaces.CurrencyRatePayload[]}
    */
-  getRateHistory (
+  getCurrencyRateHistory (
     id: string,
   ): Interfaces.CurrencyRatePayload[] {
     const rateHistory = this.prevCurrencyRatesMap.get(id) ?? [];

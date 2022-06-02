@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CurrencyComponent } from './components/currency';
 import { CurrencyMainComponent } from './components/currency-main';
 import { CurrencyRatesComponent } from './components/currency-rates';
+import { CurrencyReportComponent } from './components/currency-report';
 
 const routes: Routes = [
   {
@@ -13,6 +14,10 @@ const routes: Routes = [
       {
         path: 'rates',
         component: CurrencyRatesComponent,
+      },
+      {
+        path: 'report',
+        component: CurrencyReportComponent,
       },
       {
         path: '',

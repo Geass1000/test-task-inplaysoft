@@ -1,0 +1,20 @@
+<select
+  class="active-currency-select"
+  [ngModel]="activeCurrencyId"
+  (ngModelChange)="onChangeActiveCurrency($event)"
+>
+  <option
+    *ngFor="let currencyRate of currencyRates"
+    [ngValue]="currencyRate.id"
+  >
+    {{ currencyRate.name }}
+  </option>
+</select>
+
+<div class="chart-block">
+  <canvas baseChart width="800" height="400"
+    [data]="chartData"
+    [options]="lineChartOptions"
+    [type]="'line'"
+  ></canvas>
+</div>

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
+import { NgChartsModule } from 'ng2-charts';
 
 // Modules
 import { SharedModule } from '../shared/shared.module';
@@ -11,6 +12,7 @@ import { CurrencyRouter } from './currency.router';
 import { CurrencyComponent } from './components/currency';
 import { CurrencyMainComponent } from './components/currency-main';
 import { CurrencyRatesComponent } from './components/currency-rates';
+import { CurrencyReportComponent } from './components/currency-report';
 
 // Services
 import { CurrencyService } from './services/currency.service';
@@ -29,12 +31,14 @@ import { CurrencyRateRS } from './resources/currency-rate.rs';
     SharedModule,
     CurrencyRouter,
     AgGridModule,
+    NgChartsModule,
   ],
   declarations: [
     // Components
     CurrencyComponent,
     CurrencyMainComponent,
     CurrencyRatesComponent,
+    CurrencyReportComponent,
   ],
   providers: [
     // Services
