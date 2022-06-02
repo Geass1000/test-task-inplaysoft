@@ -15,7 +15,7 @@ import { CurrencyRatesComponent } from './components/currency-rates';
 // Services
 import { CurrencyService } from './services/currency.service';
 import { CurrencyArbiter } from './services/currency.arbiter';
-import { CurrencyRatesArbiter } from './services/currency-rates.arbiter';
+import { CurrencyHistoryArbiter } from './services/currency-history.arbiter';
 
 // RS
 import { CurrencyRateRS } from './resources/currency-rate.rs';
@@ -40,7 +40,7 @@ import { CurrencyRateRS } from './resources/currency-rate.rs';
     // Services
     CurrencyService,
     CurrencyArbiter,
-    CurrencyRatesArbiter,
+    CurrencyHistoryArbiter,
     // RS
     CurrencyRateRS,
   ],

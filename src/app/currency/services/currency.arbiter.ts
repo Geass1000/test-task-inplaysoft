@@ -5,7 +5,7 @@ import { BaseManager } from '../../shared';
 
 // Services
 import { CurrencyService } from './currency.service';
-import { CurrencyRatesArbiter } from './currency-rates.arbiter';
+import { CurrencyHistoryArbiter } from './currency-history.arbiter';
 
 // SS
 
@@ -25,7 +25,7 @@ export class CurrencyArbiter extends BaseManager {
   constructor (
     // Service
     private currencyService: CurrencyService,
-    private currencyRatesArbiter: CurrencyRatesArbiter,
+    private currencyHistoryArbiter: CurrencyHistoryArbiter,
     // SS
   ) {
     super();
@@ -102,8 +102,8 @@ export class CurrencyArbiter extends BaseManager {
   private async updateCurrencyRates (): Promise<void> {
     try {
       const currencyRates = await this.currencyService.loadCurrentCurrencyRates();
-
-      this.currencyRatesArbiter.updateCurrencyRates(currencyRates);
+      this.currencyHistoryArbiter.updateCurrencyRates(currencyRates);
+      this.sjNotif.next();
     } catch (error) {
       console.error(`CurrencyArbiter.startCurrencyUpdateInterval: Can't load currency rates. Error:`, error);
     }

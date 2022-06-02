@@ -16,7 +16,7 @@ import type { Interfaces } from '../shared';
 import { Enums } from '../shared';
 
 @Injectable()
-export class CurrencyRatesArbiter extends BaseManager {
+export class CurrencyHistoryArbiter extends BaseManager {
   private prevCurrencyRatesMap: Map<string, Interfaces.CurrencyRatePayload[]> = new Map();
 
   constructor (
@@ -42,6 +42,19 @@ export class CurrencyRatesArbiter extends BaseManager {
     _.forEach(prevCurrencyRatesHistory, (currencyRateHistoryItem) => {
       this.prevCurrencyRatesMap.set(currencyRateHistoryItem.id, currencyRateHistoryItem.rates);
     });
+  }
+
+  /**
+   * Returns the currency rate history.
+   *
+   * @param  {string} id
+   * @return {Interfaces.CurrencyRatePayload[]}
+   */
+  getRateHistory (
+    id: string,
+  ): Interfaces.CurrencyRatePayload[] {
+    const rateHistory = this.prevCurrencyRatesMap.get(id) ?? [];
+    return [ ...rateHistory ];
   }
 
   /**
