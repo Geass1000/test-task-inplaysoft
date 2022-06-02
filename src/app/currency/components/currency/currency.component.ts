@@ -58,7 +58,9 @@ export class CurrencyComponent extends BaseComponent implements OnInit {
   ): Promise<void> {
     // Init arbiters
     await this.currencyHistoryArbiter.$init();
+    this.registerManager(this.currencyHistoryArbiter);
     await this.currencyArbiter.$init();
+    this.registerManager(this.currencyArbiter);
 
     this.forceRender();
   }

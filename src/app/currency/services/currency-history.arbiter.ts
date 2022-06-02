@@ -45,6 +45,14 @@ export class CurrencyHistoryArbiter extends BaseManager {
   }
 
   /**
+   * Destroys the arbiter:
+   *  - clears the prev currency rates.
+   */
+  $destroy (): void {
+    this.prevCurrencyRatesMap.clear();
+  }
+
+  /**
    * Returns the currency rate history.
    *
    * @param  {string} id

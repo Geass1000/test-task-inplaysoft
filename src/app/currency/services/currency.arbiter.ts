@@ -40,6 +40,13 @@ export class CurrencyArbiter extends BaseManager {
     return this.sjNotif.asObservable();
   }
 
+  /**
+   * Inits the arbiter:
+   *  - loads the first set of rates.
+   *  - starts `Currency Update Interval` timer using stored in local store value.
+   *
+   * @return {Promise<void>}
+   */
   async $init (): Promise<void> {
     await this.updateCurrencyRates();
 
@@ -50,7 +57,20 @@ export class CurrencyArbiter extends BaseManager {
   }
 
   /**
+   * Destroys the arbiter:
+   *  - stops `Currency Update Interval` timer;
+   *
+   * @return {void}
+   */
+  $destroy (): void {
+    this.stopCurrencyUpdateInterval();
+  }
+
+  /**
    * Starts `Currency Update Interval` timer.
+   *
+   * FYI: This timer loads the set of currency rates w/ some period. Loaded currency rates
+   * replace the current currency rates. Old currency rates are saved in the history arbiter.
    *
    * @param  {number} currencyUpdateIntervalSec - seconds unit
    * @return {void}
@@ -95,7 +115,7 @@ export class CurrencyArbiter extends BaseManager {
   }
 
   /**
-   * Loads the new currency rates and saves them in resource store.
+   * Loads the new currency rates and saves them in resource store. Prev ones are saved in the history arbiter.
    *
    * @return {Promise<void>}
    */
