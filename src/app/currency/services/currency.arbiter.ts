@@ -99,9 +99,6 @@ export class CurrencyArbiter extends BaseManager {
 
     this.stopCurrencyUpdateInterval();
 
-    this.stopCurrencyDirectionTimeout();
-    this.resetCurrencyUpdateStates();
-
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.currencyUpdateIntervalTimer = setTimeout(async () => {
       await this.updateCurrencyRates();
@@ -135,6 +132,7 @@ export class CurrencyArbiter extends BaseManager {
    */
   private async updateCurrencyRates (): Promise<void> {
     try {
+      console.log(`CurrencyArbiter.updateCurrencyRates: Update currency rates.`);
       const currencyRates = await this.currencyService.loadCurrentCurrencyRates();
       this.currencyHistoryArbiter.updateCurrencyRates(currencyRates);
       this.sjNotif.next();
@@ -190,6 +188,8 @@ export class CurrencyArbiter extends BaseManager {
         '!==' : Enums.CurrencyUpdateState.Equal,
       },
     });
+    console.log(`CurrencyArbiter.resetCurrencyUpdateStates:`,
+      `Marks all updated currency as non-changed. Entries:`, allUpdatedCurencyRates);
 
     const currencyStatesWithResetUpdateState = _.map(allUpdatedCurencyRates, (curencyRates) => {
       return {
