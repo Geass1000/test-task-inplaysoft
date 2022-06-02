@@ -99,6 +99,9 @@ export class CurrencyArbiter extends BaseManager {
 
     this.stopCurrencyUpdateInterval();
 
+    this.stopCurrencyDirectionTimeout();
+    this.resetCurrencyUpdateStates();
+
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.currencyUpdateIntervalTimer = setTimeout(async () => {
       await this.updateCurrencyRates();
