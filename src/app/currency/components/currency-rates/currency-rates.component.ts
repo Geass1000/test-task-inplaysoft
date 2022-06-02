@@ -12,6 +12,7 @@ import { BaseComponent } from '@shared';
 import { CurrencyRateRS } from '../../resources/currency-rate.rs';
 
 // Services
+import { CurrencyArbiter } from '../../services/currency.arbiter';
 
 // SS
 
@@ -99,6 +100,8 @@ export class CurrencyRatesComponent extends BaseComponent implements OnInit {
   constructor (
     // Angular
     protected changeDetection: ChangeDetectorRef,
+    // Services
+    private currencyArbiter: CurrencyArbiter,
     // RS
     private currencyRateRS: CurrencyRateRS,
     // SS
@@ -116,7 +119,7 @@ export class CurrencyRatesComponent extends BaseComponent implements OnInit {
    */
   async ngOnInit (
   ): Promise<void> {
-    const currencyRateRS$ = this.currencyRateRS.getInjectObserver()
+    const currencyRateRS$ = this.currencyArbiter.getObserver()
       .subscribe(() => {
         this.updateView();
       });
