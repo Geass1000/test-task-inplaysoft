@@ -24,7 +24,14 @@
       id="currencyChangeDirectionTimeout"
       class="form-el-input"
       [(ngModel)]="currencyChangeDirectionTimeout"
-      (ngModelChange)="onChangeCurrencyUpdateInterval()"
+      (ngModelChange)="onChangeCurrencyChangeDirectionTimeout()"
     >
+    <div
+      *ngIf="currencyDirectionLimitWarningIsShown === true"
+      class="error currency-change-direction-limit-warning"
+    >
+      Timeout can't be more than Update Interval.
+      <br> Direction will be changed with currency update.
+    </div>
   </div>
 </div>

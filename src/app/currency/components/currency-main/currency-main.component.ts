@@ -13,6 +13,8 @@ import { BaseComponent } from '@shared';
 import { CurrencyArbiter } from '../../services/currency.arbiter';
 
 // SS
+import { StateStore } from '@core/state-store';
+import { CurrencyAction } from '../../currency.action';
 
 import { Enums } from '../../shared';
 
@@ -26,6 +28,8 @@ export class CurrencyMainComponent extends BaseComponent implements OnInit {
   public currencyUpdateInterval: number;
   public currencyChangeDirectionTimeout: number = 5;
 
+  public currencyDirectionLimitWarningIsShown = false;
+
   constructor (
     // Angular
     protected changeDetection: ChangeDetectorRef,
@@ -33,17 +37,36 @@ export class CurrencyMainComponent extends BaseComponent implements OnInit {
     private currencyArbiter: CurrencyArbiter,
     // RS
     // SS
+    private stateStore: StateStore,
+    private currencyAction: CurrencyAction,
   ) {
     super(changeDetection);
   }
 
+  /**
+   * Inits component:
+   *  - gets from state store currency interval and direction timeout and uses them to init form;
+   *
+   * @return {void}
+   */
   async ngOnInit (
   ): Promise<void> {
     // Init form
-    this.currencyUpdateInterval = this.localStorageService
-      .getNumber(Enums.LocalStorageKey.CurrencyUpdateInterval, 10);
+    this.currencyUpdateInterval = this.stateStore.getState(Enums.State.CurrencyUpdateInterval);
+    this.currencyChangeDirectionTimeout = this.stateStore.getState(Enums.State.CurrencyChangeDirectionTimeout);
 
+    this.updateCurrencyDirectionView();
     this.forceRender();
+  }
+
+  /**
+   * Updates currency direction view.
+   *
+   * @return {void}
+   */
+  updateCurrencyDirectionView (): void {
+    this.currencyDirectionLimitWarningIsShown = this.currencyChangeDirectionTimeout >= this.currencyUpdateInterval;
+    this.render(`updateCurrencyDirectionView`, [ this.currencyDirectionLimitWarningIsShown ]);
   }
 
   /**
@@ -53,13 +76,14 @@ export class CurrencyMainComponent extends BaseComponent implements OnInit {
    * @return {void}
    */
   onChangeCurrencyUpdateInterval (): void {
-    if (_.isNil(this.onChangeCurrencyUpdateInterval) === true) {
+    if (_.isNil(this.currencyUpdateInterval) === true) {
       return;
     }
 
     console.log(`Currency Update Interval:`, this.currencyUpdateInterval);
     this.currencyArbiter.startCurrencyUpdateInterval(this.currencyUpdateInterval);
     this.localStorageService.setValue(Enums.LocalStorageKey.CurrencyUpdateInterval, this.currencyUpdateInterval);
+    this.currencyAction.setCurrencyChangeDirectionTimeout(this.currencyUpdateInterval);
   }
 
   /**
@@ -69,6 +93,19 @@ export class CurrencyMainComponent extends BaseComponent implements OnInit {
    * @return {void}
    */
   onChangeCurrencyChangeDirectionTimeout (): void {
+    if (_.isNil(this.currencyChangeDirectionTimeout) === true) {
+      return;
+    }
+
     console.log(`Currency Change Direction Timeout:`, this.currencyChangeDirectionTimeout);
+    this.localStorageService.setValue(
+      Enums.LocalStorageKey.CurrencyChangeDirectionTimeout, this.currencyChangeDirectionTimeout,
+    );
+    this.currencyAction.setCurrencyChangeDirectionTimeout(this.currencyChangeDirectionTimeout);
+
+    this.updateCurrencyDirectionView();
+
+    if (this.currencyDirectionLimitWarningIsShown === false) {
+    }
   }
 }

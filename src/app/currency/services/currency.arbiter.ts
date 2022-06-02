@@ -8,6 +8,7 @@ import { CurrencyService } from './currency.service';
 import { CurrencyHistoryArbiter } from './currency-history.arbiter';
 
 // SS
+import { StateStore } from '@core/state-store';
 
 // RS
 import { Enums } from '../shared';
@@ -27,6 +28,7 @@ export class CurrencyArbiter extends BaseManager {
     private currencyService: CurrencyService,
     private currencyHistoryArbiter: CurrencyHistoryArbiter,
     // SS
+    private stateStore: StateStore,
   ) {
     super();
   }
@@ -50,10 +52,8 @@ export class CurrencyArbiter extends BaseManager {
   async $init (): Promise<void> {
     await this.updateCurrencyRates();
 
-    const currencyUpdateIntervalSec = this.localStorageService
-      .getNumber(Enums.LocalStorageKey.CurrencyUpdateInterval, 15);
-
-    this.startCurrencyUpdateInterval(currencyUpdateIntervalSec);
+    const currencyUpdateInterval = this.stateStore.getState<number>(Enums.State.CurrencyUpdateInterval);
+    this.startCurrencyUpdateInterval(currencyUpdateInterval);
   }
 
   /**

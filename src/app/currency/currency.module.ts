@@ -23,6 +23,7 @@ import { CurrencyHistoryArbiter } from './services/currency-history.arbiter';
 import { CurrencyRateRS } from './resources/currency-rate.rs';
 
 // SS
+import { CurrencyAction } from './currency.action';
 
 @NgModule({
   imports: [
@@ -47,6 +48,8 @@ import { CurrencyRateRS } from './resources/currency-rate.rs';
     CurrencyHistoryArbiter,
     // RS
     CurrencyRateRS,
+    // SS
+    CurrencyAction,
   ],
 })
 export class CurrencyModule {

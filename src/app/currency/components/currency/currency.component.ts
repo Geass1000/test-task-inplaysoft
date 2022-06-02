@@ -14,6 +14,9 @@ import { CurrencyArbiter } from '../../services/currency.arbiter';
 import { CurrencyHistoryArbiter } from '../../services/currency-history.arbiter';
 
 // SS
+import { CurrencyAction } from '../../currency.action';
+
+import { Enums } from '../../shared';
 
 interface Route {
   label: string;
@@ -50,12 +53,30 @@ export class CurrencyComponent extends BaseComponent implements OnInit {
     private currencyHistoryArbiter: CurrencyHistoryArbiter,
     // RS
     // SS
+    private currencyAction: CurrencyAction,
   ) {
     super(changeDetection);
   }
 
+  /**
+   * Inits component:
+   *  - inits currency interval and direction timeout in state store;
+   *  - start currency history arbiter;
+   *  - start currency arbiter;
+   *
+   * @return {Porimse<void>}
+   */
   async ngOnInit (
   ): Promise<void> {
+    // Init state store
+    const currencyUpdateInterval = this.localStorageService
+      .getNumber(Enums.LocalStorageKey.CurrencyUpdateInterval, 15);
+    this.currencyAction.setCurrencyUpdateInterval(currencyUpdateInterval);
+
+    const currencyChangeDirectionTimeout = this.localStorageService
+      .getNumber(Enums.LocalStorageKey.CurrencyChangeDirectionTimeout, 10);
+    this.currencyAction.setCurrencyChangeDirectionTimeout(currencyChangeDirectionTimeout);
+
     // Init arbiters
     await this.currencyHistoryArbiter.$init();
     this.registerManager(this.currencyHistoryArbiter);

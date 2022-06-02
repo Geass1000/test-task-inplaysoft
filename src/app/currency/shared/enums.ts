@@ -1,5 +1,6 @@
 
 export enum LocalStorageKey {
+  CurrencyChangeDirectionTimeout = `CurrencyChangeDirectionTimeout`,
   CurrencyUpdateInterval = `CurrencyUpdateInterval`,
   CurrencyRatesHistory = `CurrencyRatesHistory`,
   CurrencyRatesHistoryMinCapacity = `CurrencyRatesHistoryMinCapacity`,
@@ -11,3 +12,9 @@ export enum CurrencyUpdateState {
   More = 'More',
   Less = 'Less',
 }
+
+export const StateStoreName = `currency`;
+export const State = {
+  CurrencyUpdateInterval: [ StateStoreName, 'currencyUpdateInterval' ],
+  CurrencyChangeDirectionTimeout: [ StateStoreName, 'currencyChangeDirectionTimeout' ],
+};

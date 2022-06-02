@@ -101,8 +101,7 @@ export class CurrencyHistoryArbiter extends BaseManager {
       };
     });
 
-    const updatedCurrencyRates = this.currencyRateRS.inject(currencyRatesWithStats);
-    console.log(updatedCurrencyRates);
+    this.currencyRateRS.inject(currencyRatesWithStats);
   }
 
   /**

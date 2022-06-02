@@ -32,3 +32,8 @@ export interface CurrencyRateHistoryItem {
   id: string;
   rates: CurrencyRatePayload[];
 }
+
+export interface CurrencyStore {
+  currencyUpdateInterval: number;
+  currencyChangeDirectionTimeout: number;
+}
