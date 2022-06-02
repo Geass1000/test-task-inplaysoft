@@ -22,10 +22,25 @@ export class CurrencyService extends BaseManager {
    * @return {Promise<Interfaces.CurrencyRateHistoryItem[]>}
    */
   async loadCurrencyRatesHistory (): Promise<Interfaces.CurrencyRateHistoryItem[]> {
-    const currencyRatesHistory = this.localStorageService
+    const currencyRatesHistory: Interfaces.CurrencyRateHistoryItem[] = this.localStorageService
       .getValue(Enums.LocalStorageKey.CurrencyRatesHistory) ?? [];
 
-    return currencyRatesHistory;
+    // Convert dates (ISO) to Date objects
+    const currencyRatesHistoryWithDate = _.map(currencyRatesHistory, (currencyRatePayload) => {
+      const ratesWithDate = _.map(currencyRatePayload.rates, (rate) => {
+        return {
+          value: rate.value,
+          createdAt: new Date(rate.createdAt),
+        } as Interfaces.CurrencyRatePayload;
+      });
+
+      return {
+        id: currencyRatePayload.id,
+        rates: ratesWithDate,
+      } as Interfaces.CurrencyRateHistoryItem;
+    });
+
+    return currencyRatesHistoryWithDate;
   }
 
   /**
