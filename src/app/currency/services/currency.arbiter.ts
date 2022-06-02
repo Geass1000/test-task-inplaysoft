@@ -11,6 +11,8 @@ import { CurrencyHistoryArbiter } from './currency-history.arbiter';
 import { StateStore } from '@core/state-store';
 
 // RS
+import { CurrencyRateRS } from '../resources/currency-rate.rs';
+
 import { Enums } from '../shared';
 
 @Injectable()
@@ -20,6 +22,11 @@ export class CurrencyArbiter extends BaseManager {
    * Loads the list of currency rates and saves them.
    */
   public currencyUpdateIntervalTimer: number;
+  /**
+   * Instance of Timer.
+   * Marks all updated currency states as non-changed.
+   */
+  public currencyDirectionTimeoutTimer: number;
 
   public sjNotif: Subject<number> = new Subject();
 
@@ -27,6 +34,8 @@ export class CurrencyArbiter extends BaseManager {
     // Service
     private currencyService: CurrencyService,
     private currencyHistoryArbiter: CurrencyHistoryArbiter,
+    // RS
+    private currencyRateRS: CurrencyRateRS,
     // SS
     private stateStore: StateStore,
   ) {
@@ -54,6 +63,7 @@ export class CurrencyArbiter extends BaseManager {
 
     const currencyUpdateInterval = this.stateStore.getState<number>(Enums.State.CurrencyUpdateInterval);
     this.startCurrencyUpdateInterval(currencyUpdateInterval);
+    this.startCurrencyDirectionTimeout();
   }
 
   /**
@@ -97,6 +107,7 @@ export class CurrencyArbiter extends BaseManager {
       // FYI: Next iteration. We don't use interval timer bz we want to start next iteration only after we get a
       // current currency rates. Macrotask level interval.
       this.startCurrencyUpdateInterval(currencyUpdateIntervalSec);
+      this.startCurrencyDirectionTimeout();
     }, currencyUpdateIntervalSec * 1000) as any as number;
   }
 
@@ -127,5 +138,64 @@ export class CurrencyArbiter extends BaseManager {
     } catch (error) {
       console.error(`CurrencyArbiter.startCurrencyUpdateInterval: Can't load currency rates. Error:`, error);
     }
+  }
+
+  /**
+   * Starts `Currency Direction Timeout` timer.
+   *
+   * FYI: This timer clears `Update` status of all currency rates in the `Currency Direction Timeout` time.
+   * If this timer delay is equal to or more than `Update Interval` delay, timer won't start.
+   *
+   * @return {void}
+   */
+  startCurrencyDirectionTimeout (): void {
+    const currencyUpdateInterval = this.stateStore.getState<number>(Enums.State.CurrencyUpdateInterval);
+    const currencyChangeDirectionTimeout = this.stateStore.getState<number>(Enums.State.CurrencyChangeDirectionTimeout);
+
+    if (currencyChangeDirectionTimeout >= currencyUpdateInterval) {
+      return;
+    }
+
+    this.stopCurrencyDirectionTimeout();
+
+    this.currencyDirectionTimeoutTimer = setTimeout(() => {
+      this.resetCurrencyUpdateStates();
+      this.currencyDirectionTimeoutTimer = null;
+    }, currencyChangeDirectionTimeout) as any as number;
+  }
+
+  /**
+   * Stops `Currency Direction Timeout` timer.
+   *
+   * @return {void}
+   */
+  stopCurrencyDirectionTimeout (): void {
+    if (_.isNil(this.currencyDirectionTimeoutTimer) === false) {
+      clearTimeout(this.currencyDirectionTimeoutTimer);
+      this.currencyDirectionTimeoutTimer = null;
+    }
+  }
+
+  /**
+   * Marks all updated currency as non-changed.
+   *
+   * @return {void}
+   */
+  private resetCurrencyUpdateStates (): void {
+    const allUpdatedCurencyRates = this.currencyRateRS.findAll({
+      updateState: {
+        '!==' : Enums.CurrencyUpdateState.Equal,
+      },
+    });
+
+    const currencyStatesWithResetUpdateState = _.map(allUpdatedCurencyRates, (curencyRates) => {
+      return {
+        ...curencyRates,
+        updateState: Enums.CurrencyUpdateState.Equal,
+      };
+    });
+
+    this.currencyRateRS.inject(currencyStatesWithResetUpdateState);
+    this.sjNotif.next();
   }
 }
