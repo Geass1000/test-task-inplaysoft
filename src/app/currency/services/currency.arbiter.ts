@@ -74,6 +74,7 @@ export class CurrencyArbiter extends BaseManager {
    */
   $destroy (): void {
     this.stopCurrencyUpdateInterval();
+    this.stopCurrencyDirectionTimeout();
   }
 
   /**
