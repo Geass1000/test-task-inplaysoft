@@ -164,7 +164,7 @@ export class CurrencyArbiter extends BaseManager {
     this.currencyDirectionTimeoutTimer = setTimeout(() => {
       this.resetCurrencyUpdateStates();
       this.currencyDirectionTimeoutTimer = null;
-    }, currencyChangeDirectionTimeout) as any as number;
+    }, currencyChangeDirectionTimeout * 1000) as any as number;
   }
 
   /**
