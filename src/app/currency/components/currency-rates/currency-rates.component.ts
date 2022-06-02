@@ -45,6 +45,7 @@ export class CurrencyRatesComponent extends BaseComponent implements OnInit {
     {
       field: 'value',
       width: 120,
+      filter: 'agNumberColumnFilter',
     },
     {
       field: 'unit',
@@ -54,11 +55,13 @@ export class CurrencyRatesComponent extends BaseComponent implements OnInit {
       headerName: 'Average (1 min)',
       field: 'avg1Min',
       width: 170,
+      filter: 'agNumberColumnFilter',
     },
     {
       headerName: 'Average (2 min)',
       field: 'avg2Min',
       width: 170,
+      filter: 'agNumberColumnFilter',
     },
     {
       headerName: 'Average (3 min)',
@@ -69,16 +72,19 @@ export class CurrencyRatesComponent extends BaseComponent implements OnInit {
       headerName: 'Average (5 min)',
       field: 'avg5Min',
       width: 170,
+      filter: 'agNumberColumnFilter',
     },
     {
       headerName: 'Min',
       field: 'min',
       width: 120,
+      filter: 'agNumberColumnFilter',
     },
     {
       headerName: 'Max',
       field: 'max',
       width: 120,
+      filter: 'agNumberColumnFilter',
     },
   ];
 
