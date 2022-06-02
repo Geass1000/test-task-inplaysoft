@@ -18,6 +18,14 @@ import { Enums } from '../shared';
 @Injectable()
 export class CurrencyHistoryArbiter extends BaseManager {
   private prevCurrencyRatesMap: Map<string, Interfaces.CurrencyRatePayload[]> = new Map();
+  /**
+   * FYI: We should store more history items than number in this property.
+   */
+  private MinHistoryCapacity: number;
+  /**
+   * FYI: We should save less history items than number in this property.
+   */
+  private MaxHistoryCapacity: number;
 
   constructor (
     // Services
@@ -37,6 +45,10 @@ export class CurrencyHistoryArbiter extends BaseManager {
    */
   async $init (): Promise<void> {
     const prevCurrencyRatesHistory = await this.currencyService.loadCurrencyRatesHistory();
+    this.MinHistoryCapacity = this.localStorageService
+      .getNumber(Enums.LocalStorageKey.CurrencyRatesHistoryMinCapacity, 10);
+    this.MaxHistoryCapacity = this.localStorageService
+      .getNumber(Enums.LocalStorageKey.CurrencyRatesHistoryMaxCapacity, 100);
 
     this.prevCurrencyRatesMap.clear();
     _.forEach(prevCurrencyRatesHistory, (currencyRateHistoryItem) => {
@@ -75,6 +87,9 @@ export class CurrencyHistoryArbiter extends BaseManager {
   ): void {
     const prevCurrencyRates = this.currencyRateRS.findAll();
     this.savePrevCurrencyRates(prevCurrencyRates);
+
+    // TODO[NEXT]: Remove this step after we've implemented logic to load currency history from store
+    this.savePrevCurrencyRatesToStore();
 
     const currencyRatesWithStats = _.map(currencyRates, (currencyRate) => {
       const prevCurrencyRate = _.find(prevCurrencyRates, [ 'id', currencyRate.id ]);
@@ -166,9 +181,11 @@ export class CurrencyHistoryArbiter extends BaseManager {
     if (_.isEmpty(prevCurrencyRates) === true){
       return;
     }
+    const curDateLx = luxon.DateTime.local();
+    const date5MinsAgo = curDateLx.minus({ minutes: 5 }).toJSDate();
 
     _.forEach(prevCurrencyRates, (currencyRate) => {
-      const prevCurrencyRateValues = this.prevCurrencyRatesMap.get(currencyRate.id) ?? [];
+      const prevCurrencyRatePayloads = this.prevCurrencyRatesMap.get(currencyRate.id) ?? [];
 
       // FYI[WORKFLOW]: Store minimized object to reduce memory usage
       const newShortCurrencyRate: Interfaces.CurrencyRatePayload = {
@@ -176,14 +193,42 @@ export class CurrencyHistoryArbiter extends BaseManager {
         createdAt: currencyRate.createdAt,
       };
 
-      const updatedRateValues = [ ...prevCurrencyRateValues ];
-      if (prevCurrencyRateValues.length < 10) {
-        updatedRateValues.push(newShortCurrencyRate);
-      } else {
-        updatedRateValues.splice(0, 1, newShortCurrencyRate);
+      const nonStaleCurrencyRatesPayloads: Interfaces.CurrencyRatePayload[] = [];
+      for (let i = prevCurrencyRatePayloads.length - 1; i >= 0; i--) {
+        if (nonStaleCurrencyRatesPayloads.length > this.MaxHistoryCapacity) {
+          break;
+        }
+
+        // Try to save only actual data but more than min history capacity
+        const currencyRatePayload = prevCurrencyRatePayloads[i];
+        if (currencyRatePayload.createdAt < date5MinsAgo
+            && nonStaleCurrencyRatesPayloads.length >= this.MinHistoryCapacity) {
+          break;
+        }
+
+        nonStaleCurrencyRatesPayloads.push(currencyRatePayload);
       }
 
-      this.prevCurrencyRatesMap.set(currencyRate.id, updatedRateValues);
+      const nonStaleCurrencyRatesPayloadsByDesc = nonStaleCurrencyRatesPayloads.reverse();
+      nonStaleCurrencyRatesPayloadsByDesc.push(newShortCurrencyRate);
+
+      this.prevCurrencyRatesMap.set(currencyRate.id, nonStaleCurrencyRatesPayloadsByDesc);
     });
+  }
+
+  /**
+   * Parses current currency history and saves it to store (Local Storage).
+   *
+   * @return {void}
+   */
+  private savePrevCurrencyRatesToStore (): void {
+    const historyItems: Interfaces.CurrencyRateHistoryItem[] = [];
+    this.prevCurrencyRatesMap.forEach((currencyRatePayloads, currencyId) => {
+      historyItems.push({
+        id: currencyId,
+        rates: currencyRatePayloads,
+      });
+    });
+    this.localStorageService.setValue(Enums.LocalStorageKey.CurrencyRatesHistory, historyItems);
   }
 }

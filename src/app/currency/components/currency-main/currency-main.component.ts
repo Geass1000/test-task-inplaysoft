@@ -14,7 +14,7 @@ import { CurrencyArbiter } from '../../services/currency.arbiter';
 
 // SS
 
-import { Enums, Interfaces } from '../../shared';
+import { Enums } from '../../shared';
 
 @Component({
   selector: 'ag-currency-main',
