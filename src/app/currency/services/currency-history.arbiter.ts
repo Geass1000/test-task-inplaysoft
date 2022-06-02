@@ -48,7 +48,7 @@ export class CurrencyHistoryArbiter extends BaseManager {
     this.MinHistoryCapacity = this.localStorageService
       .getNumber(Enums.LocalStorageKey.CurrencyRatesHistoryMinCapacity, 10);
     this.MaxHistoryCapacity = this.localStorageService
-      .getNumber(Enums.LocalStorageKey.CurrencyRatesHistoryMaxCapacity, 100);
+      .getNumber(Enums.LocalStorageKey.CurrencyRatesHistoryMaxCapacity, 30);
 
     this.prevCurrencyRatesMap.clear();
     _.forEach(prevCurrencyRatesHistory, (currencyRateHistoryItem) => {
