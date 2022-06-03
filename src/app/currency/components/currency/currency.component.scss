@@ -2,9 +2,40 @@
 @use "sass:math";
 
 :host {
-  width: 100%;
+  width: 800px;
   height: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
+
+  padding: 25px 0;
+}
+
+.navigation-section {
+  display: flex;
+
+  margin-bottom: 15px;
+}
+
+.navigation-item {
+  border: none;
+  margin-right: 10px;
+
+  color: black;
+  font-size: 18px;
+  text-transform: uppercase;
+  text-decoration: none;
+
+  &.active {
+    border-bottom: 1px solid black;
+  }
+}
+
+@media (max-width: 830px) {
+  :host {
+    width: 100%;
+
+    padding-left: 15px;
+    padding-right: 15px;
+  }
 }

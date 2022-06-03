@@ -1,10 +1,14 @@
 
-<a
-  *ngFor="let route of routes"
-  [routerLink]="route.path"
-  routerLinkActive="active"
->
-  {{ route.label }}
-</a>
+<div class="navigation-section">
+  <a
+    class="navigation-item"
+    *ngFor="let route of routes"
+    [routerLink]="route.path"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    {{ route.label }}
+  </a>
+</div>
 
 <router-outlet (activate)="onRouteActivated()"></router-outlet>
