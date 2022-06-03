@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { SessionGuard } from '../session/services/session.guard';
 
 import { CurrencyComponent } from './components/currency';
 import { CurrencyMainComponent } from './components/currency-main';
@@ -10,6 +11,8 @@ const routes: Routes = [
   {
     path: '',
     component: CurrencyComponent,
+    canActivate: [ SessionGuard ],
+    canActivateChild: [ SessionGuard ],
     children: [
       {
         path: 'rates',
