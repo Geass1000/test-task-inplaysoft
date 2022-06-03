@@ -1,0 +1,67 @@
+
+@use "sass:math";
+
+:host {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.login-form {
+  width: 400px;
+
+  padding: 25px;
+  border: 1px solid black;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  margin-bottom: 20px;
+}
+
+.login-form-header {
+  margin-bottom: 20px;
+
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.form-el-label {
+  margin-bottom: 3px;
+
+  font-size: 16px;
+}
+
+.form-el-input {
+  width: 100%;
+
+  padding: 8px 10px;
+
+  font-size: 18px;
+}
+
+.login-btn {
+  width: 100%;
+
+  background-color: white;
+  padding: 8px 15px;
+  margin-top: 5px;
+
+  font-size: 18px;
+
+  cursor: pointer;
+}
+
+.error-message {
+  margin-top: 4px;
+  
+  color: red;
+  font-size: 14px;
+}

@@ -10,6 +10,7 @@ import { SharedModule } from './shared/shared.module';
 
 // Modules
 import { CurrencyModule } from './currency/currency.module';
+import { SessionModule } from './session/session.module';
 
 // Components
 import { AppComponent } from './components/app';
@@ -30,6 +31,7 @@ import { StateStore } from '@core/state-store';
     FortawesomeModule,
     SharedModule,
     CurrencyModule,
+    SessionModule,
   ],
   declarations: [
     // Components
